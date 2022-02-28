@@ -1,49 +1,49 @@
-const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema(
   {
-    name: {
+    username: {
       type: String,
       trim: true,
-      required: [true, "name required"],
+      required: [true, 'user name required'],
       max: 32,
     },
     email: {
       type: String,
       trim: true,
-      required: [true, "email required"],
+      required: [true, 'email required'],
       unique: true,
       lowercase: true,
     },
     password: {
       type: String,
-      required: [true, "password required"],
+      required: [true, 'password required'],
     },
     salt: String,
     role: {
       type: String,
-      default: "subscriber",
+      default: 'user',
     },
     resetPasswordLink: {
       type: String,
-      default: "",
+      default: '',
     },
   },
   { timestamps: true }
 );
 
 // virtual
-userSchema
-  .virtual("password")
-  .set(function (password) {
-    this._password = password;
-    this.salt = this.makeSalt();
-    this.password = this.encryptPassword(salt, password);
-  })
-  .get(function () {
-    return this._password;
-  });
+// userSchema
+//   .virtual('password')
+//   .set(function (password) {
+//     this._password = password;
+//     this.salt = this.makeSalt();
+//     this.password = this.encryptPassword(salt, password);
+//   })
+//   .get(function () {
+//     return this._password;
+//   });
 
 userSchema.methods = {
   authenticate: async function (password) {
@@ -61,5 +61,5 @@ userSchema.methods = {
   },
 };
 
-const user = mongoose.model("User", userSchema);
-module.exports = user;
+const userModel = mongoose.model('User', userSchema);
+module.exports = userModel;
