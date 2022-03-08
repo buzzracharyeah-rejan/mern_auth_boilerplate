@@ -19,15 +19,23 @@ const userSchema = new mongoose.Schema(
     },
     password: {
       type: String,
+      select: false, 
       required: [true, 'password required'],
     },
-    salt: String,
     role: {
       type: String,
+      select: false, 
+      enum: ['admin', 'user'], 
       default: 'user',
     },
+    refreshToken: {
+      type: String, 
+      select: false, 
+      default: ''
+    }, 
     resetPasswordLink: {
       type: String,
+      select: false, 
       default: '',
     },
   },
@@ -50,17 +58,28 @@ userSchema.methods = {
   authenticate: async function (password) {
     return await bcrypt.compare(password, this.password);
   },
-  encryptPassword: async function (salt, password) {
-    try {
-      return await bcrypt.hash(salt, password);
-    } catch (error) {
-      console.log(error);
-    }
-  },
-  makeSalt: async function () {
-    return await bcrypt.genSalt(SALT);
-  },
 };
+
+userSchema.statics.encryptPassword = async function (salt, password) {
+  try {
+    return await bcrypt.hash(password, salt);
+  } catch (error) {
+    console.log(error);
+  }
+}; 
+
+userSchema.static('makeSalt',  async function () {
+  return await bcrypt.genSalt(parseInt(SALT));
+}); 
+
+// userSchema.pre('save', function(next) {
+//   if(this.isModified('password')) {
+//     const salt = makeSalt(); 
+//     const hash = encryptPassword(salt, this.password); 
+//     this.password = hash; 
+//   }
+//   next(); 
+// }) 
 
 const userModel = mongoose.model('User', userSchema);
 module.exports = userModel;

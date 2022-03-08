@@ -5,17 +5,20 @@ const jwtService = require('../services/jwtService');
 const { CLIENT_URI } = require('../configs');
 
 const authService = {
-  userSignup: async ({ username, email, password, role }) => {
+  signup: async ({ username, email, password, role }) => {
     try {
       let user = await userModel.findOne({ email });
       if (user) throw new Error('email already exists');
-      user = await userModel.create({ username, email, password, role });
+
+      const salt = await userModel.makeSalt();
+      const hash = await userModel.encryptPassword(salt, password);
+      user = await userModel.create({ username, email, password: hash, role });
       return user;
     } catch (error) {
-      throw error; 
+      throw error;
     }
   },
-  userSignupWithEmail: async ({ username, email, password, role }) => {
+  signupWithEmail: async ({ username, email, password, role }) => {
     try {
       let user = await userModel.findOne({ email });
       if (user) throw new Error('email already exists');
@@ -36,6 +39,26 @@ const authService = {
       return true;
     } catch (error) {
       throw error;
+    }
+  },
+  login: async ({ email, password }) => {
+    try {
+      let user = await userModel.findOne({email}).select('password'); 
+      if (!user) throw new Error('invalid username or password');
+
+      const isValid = await user.authenticate(password);
+      if (!isValid) throw new Error('invalid username or password');
+
+      const accessToken = await jwtService.signAccessToken({userId: user._id}); 
+      const refreshToken = await jwtService.signRefreshToken({userId: user._id});
+      user = await userModel.findOneAndUpdate({email}, {$set: {refreshToken}}); 
+      return {
+        user, 
+        accessToken, 
+        refreshToken
+      }
+    } catch (error) {
+      throw error
     }
   },
 };

@@ -1,6 +1,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
+const passport = require('passport')
 require('dotenv').config();
 
 const dbConnect = require('./configs/db');
@@ -9,10 +10,13 @@ const { CLIENT_URI, PORT_ADDRESS, NODE_ENV} = require('./configs');
 
 const app = express();
 
+// global variables
+
 // app middlewares
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(passport.initialize()); 
 // app.use(cors());
 
 if (NODE_ENV === 'development') {

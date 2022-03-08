@@ -10,5 +10,8 @@ module.exports = {
     JWT_SECRET: process.env.JWT_SECRET,
     JWT_LIFE: process.env.JWT_LIFE,
     SENDGRID_API_KEY: process.env.SENDGRID_API_KEY,
-
+    JWT_ACCESS_TOKEN_KEY: process.env.JWT_ACCESS_TOKEN_KEY,
+    JWT_ACCESS_TOKEN_LIFE: process.env.JWT_ACCESS_TOKEN_LIFE,
+    JWT_REFRESH_TOKEN_KEY: process.env.JWT_REFRESH_TOKEN_KEY,
+    JWT_REFRESH_TOKEN_LIFE: process.env.JWT_REFRESH_TOKEN_LIFE,
 }
