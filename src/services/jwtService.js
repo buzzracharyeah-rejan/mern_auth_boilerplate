@@ -7,9 +7,9 @@ const signToken = async (payload) => {
     {
       data: payload,
       sub: 'user signup',
-      exp: expiresIn,
     },
-    JWT_SECRET
+    JWT_SECRET, 
+    {expiresIn: '1d'}
   );
 };
 

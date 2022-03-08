@@ -21,7 +21,7 @@ const signupWithEmail = async (req, res, next) => {
   try {
     const resp = await authService.userSignupWithEmail(req.body);
     if (resp) {
-      res.status(201).json({
+      res.status(200).json({
         status: 200,
         message: 'user activation link sent',
       });
@@ -37,7 +37,8 @@ const signupWithEmailConfirm = async (req, res, next) => {
   try {
     const token = req.query.token; 
     const decoded = await jwtService.verifyToken(token);
-    const user = await authService.signup(decoded);
+    if(!decoded) throw new Error('invalid or expired jwt token'); 
+    const user = await authService.userSignup(decoded.data);
     res.status(201).json({
       status: SIGNUP.GROUP.SIGNUP_SUCCESS.httpStatus,
       message: SIGNUP.GROUP.SIGNUP_SUCCESS.message,
