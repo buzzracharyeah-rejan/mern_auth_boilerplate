@@ -1,6 +1,7 @@
 const authService = require('../services/authService');
 const jwtService = require('../services/jwtService');
 const { SIGNUP, OK, CREATED, LOGIN } = require('../constants/lang');
+const userModel = require('../models/user');
 
 
 const signup = async (req, res, next) => {
@@ -55,7 +56,12 @@ const signupWithEmailConfirm = async (req, res, next) => {
 
 const login = async (req, res, next) => {
   try {
-    const { user, accessToken, refreshToken } = await authService.login(req.body);
+    // const { user, accessToken, refreshToken } = await authService.login(req.body);
+    const userId = req.user._id; 
+    const accessToken = await jwtService.signAccessToken({userId}); 
+    const refreshToken = await jwtService.signRefreshToken({userId});
+    const user = await userModel.findOneAndUpdate({_id: userId}, {$set: {refreshToken}}); 
+
     res.status(OK.httpStatus).json({
       status: LOGIN.LOGIN_SUCCESS.status, 
       message: LOGIN.LOGIN_SUCCESS.message, 
