@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const { SALT } = require('../configs');
 
 const userSchema = new mongoose.Schema(
   {
@@ -57,7 +58,7 @@ userSchema.methods = {
     }
   },
   makeSalt: async function () {
-    return await bcrypt.genSalt(process.env.SALT);
+    return await bcrypt.genSalt(SALT);
   },
 };
 

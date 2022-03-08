@@ -5,6 +5,7 @@ require('dotenv').config();
 
 const dbConnect = require('./configs/db');
 const {INTERNAL_SERVER_ERROR} = require('./constants/lang'); 
+const { CLIENT_URI, PORT_ADDRESS, NODE_ENV} = require('./configs');
 
 const app = express();
 
@@ -14,8 +15,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 // app.use(cors());
 
-if (process.env.NODE_ENV === 'development') {
-  app.use(cors({ origin: process.env.CLIENT_URI }));
+if (NODE_ENV === 'development') {
+  app.use(cors({ origin: CLIENT_URI }));
 }
 // import routes
 const authRoutes = require('./routes/authRoutes');
@@ -23,7 +24,7 @@ const authRoutes = require('./routes/authRoutes');
 // middlewares
 app.use('/api/v1', authRoutes);
 
-const PORT = process.env.PORT || 5000;
+const PORT = PORT_ADDRESS || 5000;
 
 app.use((err,req,res,next) => {
   const statusCode = err.statusCode || INTERNAL_SERVER_ERROR.httpStatus; 

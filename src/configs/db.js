@@ -1,9 +1,8 @@
 const mongoose = require("mongoose");
+const { MONGODB_URI, PASS, DBNAME } = require(".");
 
 const dbConnect = () => {
-  const PASS = process.env.PASS;
-  const DBNAME = process.env.DBNAME;
-  const URI = encodeURI(process.env.MONGODB_URI
+  const URI = encodeURI(MONGODB_URI
     .replace("<password>", PASS)
     .replace("<dbname>", DBNAME));
 
