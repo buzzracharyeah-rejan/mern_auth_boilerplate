@@ -9,4 +9,14 @@ module.exports = {
       next(error);
     }
   },
+  validateQuery: (schema) => async (req, res, next) => {
+    try {
+      const { error, value } = await schema.validate(req.query);
+      if (error) throw new Error(error);
+      req.query = value;
+      next();
+    } catch (error) {
+      next(error);
+    }
+  },
 };

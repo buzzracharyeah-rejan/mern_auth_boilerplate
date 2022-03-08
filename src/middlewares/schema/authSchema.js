@@ -7,4 +7,7 @@ const bodySchema = joi.object({
   role: joi.string().required().trim().valid('admin', 'user').label('role')
 });
 
-module.exports = { bodySchema };
+const tokenSchema = joi.object({
+  token: joi.string().required().trim().label('token')
+})
+module.exports = { bodySchema, tokenSchema};
