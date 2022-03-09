@@ -31,7 +31,7 @@ const signAccessToken = async (payload) => {
       data: payload,
       sub: payload.userId,
     },
-    JWT_SECRET,
+    JWT_ACCESS_TOKEN_KEY,
     { expiresIn }
   );
 };
@@ -47,7 +47,7 @@ const signRefreshToken = async (payload) => {
       data: payload,
       sub: payload.userId, 
     },
-    JWT_SECRET,
+    JWT_REFRESH_TOKEN_KEY,
     { expiresIn }
   );
 };

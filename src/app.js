@@ -31,6 +31,7 @@ app.use('/api/v1', authRoutes);
 const PORT = PORT_ADDRESS || 5000;
 
 app.use((err,req,res,next) => {
+  console.log(err)
   const statusCode = err.statusCode || INTERNAL_SERVER_ERROR.httpStatus; 
   const message = err.message || INTERNAL_SERVER_ERROR.message
   res.status(statusCode).json({
